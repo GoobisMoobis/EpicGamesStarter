@@ -21,6 +21,16 @@ namespace EpicGamesStarter
                 return;
             }
 
+            string path = Directory.GetCurrentDirectory();
+            var programfiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+
+            if (path.Contains(programfiles, StringComparison.OrdinalIgnoreCase))
+            {
+                Console.WriteLine("Your AU copy is in program files, this may cause issues, please move it somewhere else");
+                Console.ReadLine();
+                return;
+            }    
+
             try
             {
                 Console.WriteLine("Any open Among Us windows will be closed now");
