@@ -89,7 +89,7 @@ if ((Get-Location).Path.Contains([Environment]::GetFolderPath('ProgramFiles'))) 
 }
 
 if (-not (Test-Path 'Among Us.exe')) {
-    Write-Host 'Among Us.exe not found in current directory, please place this exe in the same folder as Among Us'
+    Write-Host 'Among Us.exe not found in current directory, please place this file in the same folder as Among Us'
     Read-Host
     exit
 }
