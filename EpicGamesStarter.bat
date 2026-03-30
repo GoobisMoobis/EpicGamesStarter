@@ -35,7 +35,7 @@ start "" "com.epicgames.launcher://apps/%APPID%?action=launch&silent=true"
 set "PROC_LINE="
 for /l %%N in (1,1,30) do (
   for /f "usebackq delims=" %%L in (`
-  powershell -NoProfile -Command "$p = @(Get-CimInstance Win32_Process -Filter ""Name = '%GAMENAME%'"" ); foreach ($x in $p) { if ($x.CommandLine -like '*-AUTH_LOGIN*') { Write-Output (('{0}|{1}' -f $x.ProcessId, $x.CommandLine)); break } }"
+  powershell -NoProfile -Command "$p = @(Get-CimInstance Win32_Process -Filter ""Name = '%GAMENAME%'"" ); foreach ($x in $p) { if ($x.CommandLine -like '*-AUTH_LOGIN*') { $args = $x.CommandLine -replace '^""[^""]*""\s*', ''; Write-Output (('{0}|{1}' -f $x.ProcessId, $args)); break } }"
   `) do set "PROC_LINE=%%L"
   
   if defined PROC_LINE goto gotproc
@@ -50,7 +50,7 @@ exit /b 1
 :gotproc
 for /f "tokens=1* delims=|" %%A in ("!PROC_LINE!") do (
   set "PID=%%A"
-  set "CMDLINE=%%B"
+  set "ARGS=%%B"
 )
 
 if not defined PID (
@@ -61,6 +61,7 @@ if not defined PID (
 
 echo Starting the game in this folder and closing Epic's
 start "" "%GAMENAME%" !ARGS!
+timeout /t 3 /nobreak >nul
 taskkill /F /PID !PID! >nul 2>&1
 
 echo done
